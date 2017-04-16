@@ -18,7 +18,7 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-
+// Get list with all albums
 const list = JSON.parse(fs.readFileSync('db.json', 'utf-8')).items
 
 const getRandom = () => {
@@ -26,32 +26,32 @@ const getRandom = () => {
   return list[r]
 }
 
-let random = getRandom()
-
 const options = {
-    uri: random.resource_url,
-    headers: {
-        'User-Agent': 'Request-Promise'
-    },
-    json: true
+  uri: getRandom().resource_url,
+  headers: { 'User-Agent': 'Request-Promise' },
+  json: true
 };
 
-request(options)
-  .then((album) => {
-    console.log(`${album.title} - ${album.artists[0].name} (${album.year})`)
-    return album })
-  .then((album) => {
-    spotifyApi.searchAlbums(`${album.title} - ${album.artists[0].name}`)
-              .then( (data) => {
-                if (data.body.albums.items[0].uri) {
-                  rl.question('Quer ouvir no spotify? s/n: \n', (answer) => {
-                    if ( answer === 's') {
-                      exec(`spotify play uri ${data.body.albums.items[0].uri}`)
-                      return rl.close()
-                    } else {
-                      rl.close()
-                    }
-                  })
-                }
-              })
-  })
+const getAlbum = () => {
+  request(options)
+    .then((album) => {
+      console.log(`${album.title} - ${album.artists[0].name} (${album.year})`)
+      return album })
+    .then((album) => {
+      spotifyApi.searchAlbums(`${album.title} - ${album.artists[0].name}`)
+                .then( (data) => {
+                  if (data.body.albums.items[0].uri) {
+                    rl.question('Quer ouvir no spotify? s/n: \n', (answer) => {
+                      if ( answer === 's') {
+                        exec(`spotify play uri ${data.body.albums.items[0].uri}`)
+                        return rl.close()
+                      } else {
+                        rl.close()
+                      }
+                    })
+                  }
+                })
+    })
+}
+
+getAlbum()
