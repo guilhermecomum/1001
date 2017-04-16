@@ -1,5 +1,5 @@
 import fs from 'fs'
-import request from 'request'
+import request from 'request-promise'
 import spotifyWebApi from 'spotify-web-api-node'
 import { exec } from 'child_process'
 import readline from 'readline'
@@ -27,22 +27,30 @@ const getRandom = () => {
 
 let random = getRandom()
 
-request({url: random.resource_url, headers: {'User-Agent': 'request'}}, (error, response, body) => {
-  const album = JSON.parse(body)
+const options = {
+    uri: random.resource_url,
+    headers: {
+        'User-Agent': 'Request-Promise'
+    },
+    json: true
+};
 
-  console.log(`${album.title} - ${album.artists[0].name} (${album.year})`)
-
-  spotifyApi.searchAlbums(`${album.title} - ${album.artists[0].name}`)
-  .then( (data) => {
-    if (data.body.albums.items[0].uri) {
-      rl.question('Quer ouvir no spotify? s/n', (answer) => {
-        if ( answer === 's') {
-          exec(`spotify play uri ${data.body.albums.items[0].uri}`)
-          return rl.close()
-        } else {
-          rl.close()
-        }
-      })
-    }
-  });
-})
+request(options)
+  .then((album) => {
+    console.log(`${album.title} - ${album.artists[0].name} (${album.year})`)
+    return album })
+  .then((album) => {
+    spotifyApi.searchAlbums(`${album.title} - ${album.artists[0].name}`)
+              .then( (data) => {
+                if (data.body.albums.items[0].uri) {
+                  rl.question('Quer ouvir no spotify? s/n: \n', (answer) => {
+                    if ( answer === 's') {
+                      exec(`spotify play uri ${data.body.albums.items[0].uri}`)
+                      return rl.close()
+                    } else {
+                      rl.close()
+                    }
+                  })
+                }
+              })
+  })
