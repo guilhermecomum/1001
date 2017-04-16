@@ -3,11 +3,12 @@ import request from 'request-promise'
 import spotifyWebApi from 'spotify-web-api-node'
 import { exec } from 'child_process'
 import readline from 'readline'
+import config from './config'
 
 // credentials are optional
 const spotifyApi = new spotifyWebApi({
-  clientId : '',
-  clientSecret : '',
+  clientId : 'config.client',
+  clientSecret : 'config.secret',
   redirectUri : 'http://www.example.com/callback'
 });
 
