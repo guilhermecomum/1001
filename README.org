@@ -1,0 +1,5 @@
+* 1001 albums you must hear before you die
+Discover and manage albums from [[w3m:https://en.wikipedia.org/wiki/1001_Albums_You_Must_Hear_Before_You_Die][1001 albums you must hear before you die]]
+
+** Dependencies
+*** [[https://github.com/hnarayanan/shpotify][shpotify]]
