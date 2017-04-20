@@ -1,13 +1,14 @@
 {
-  "name": "app",
-  "version": "0.0.0",
-  "description": "Hello Expo!",
+  "name": "1001 Manager",
+  "version": "0.0.1",
+  "description": "A manager for  1001 albums you must hear before you die",
   "author": null,
   "private": true,
   "main": "main.js",
   "dependencies": {
     "expo": "^15.0.2",
     "react": "~15.4.0",
-    "react-native": "https://github.com/exponent/react-native/archive/sdk-15.0.0.tar.gz"
+    "react-native": "https://github.com/exponent/react-native/archive/sdk-15.0.0.tar.gz",
+    "spotify-web-api-node": "^2.3.6"
   }
 }

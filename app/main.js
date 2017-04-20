@@ -1,11 +1,12 @@
-import Expo from 'expo';
-import React from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity,  } from 'react-native';
-import { Components } from 'expo';
-import config from './config'
-import list from './db/db.json';
-const { BlurView } = Components;
+import React from 'react'
+import Expo from 'expo'
+import spotifyWebApi from 'spotify-web-api-node'
+import { StyleSheet, Image, Text, View, TouchableOpacity, Linking } from 'react-native'
+import { Components } from 'expo'
+import { Entypo } from '@expo/vector-icons'
 
+import config from './config'
+import list from './db/db.json'
 
 class App extends React.Component {
 
@@ -21,30 +22,48 @@ class App extends React.Component {
     this.getAlbum()
   }
 
+  handleClick() {
+    Linking.canOpenURL(this.state.spotify).then(supported => {
+      if (supported) {
+        Linking.openURL(this.state.spotify);
+      } else {
+        console.log('Don\'t know how to open URI: ' + this.state.spotify);
+      }
+    });
+  };
+
   getRandom() {
-    const r = Math.floor(Math.random()  * (list.items.length) + 1)
-    return list.items[r]
+    const r = Math.floor(Math.random()  * (list.albums.length) + 1)
+    return list.albums[r]
   }
 
   async getAlbum() {
     const album = this.getRandom()
-    const artist = album.display_title.split(' - ')[0]
-    const title = album.display_title.split(' - ')[1]
+    const artist = album.split(' - ')[0]
+    const title = album.split(' - ')[1]
+
+    const spotifyApi = new spotifyWebApi({
+      clientId : config.client,
+      clientSecret : config.secret,
+    });
+
     const API_KEY = config.api
     const url = `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${API_KEY}&artist=${artist}&album=${title}&format=json`
-
     try {
-      let response = await fetch(url);
-      let albumInfo = await response.json();
-      console.log(albumInfo.album.image[2]['#text'])
+      const response = await fetch(url);
+      const albumInfo = await response.json();
+      const spotify = await spotifyApi.searchAlbums(album)
+      const cover = albumInfo.album.image.filter( (i) => { return i.size === 'extralarge'} )[0]['#text']
+
       this.setState({
         title: title,
         artist: artist,
-        cover: albumInfo.album.image[2]['#text'] || false
+        cover: cover || false,
+        spotify: spotify.body.albums.items[0].uri || false,
       })
       return albumInfo
     } catch(error) {
-      console.error(error);
+      console.error("OMG: ", error);
     }
   }
 
@@ -89,6 +108,14 @@ class App extends React.Component {
           }}>
             {this.state.artist}
           </Text>
+          { this.state.spotify &&
+            <TouchableOpacity
+              onPress={this.handleClick.bind(this)}>
+              <View style={{ alignSelf: 'center', marginTop: 20 }}>
+                <Entypo name="spotify" size={48} color="#1ED760" />
+              </View>
+            </TouchableOpacity>
+          }
         </View>
         <TouchableOpacity
           onPress={this.getAlbum.bind(this)}
