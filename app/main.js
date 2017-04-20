@@ -15,7 +15,15 @@ class App extends React.Component {
     this.state = {
       title: '',
       artist: '',
+      cover: false,
+      url: false,
     }
+
+    this.spotifyApi = new spotifyWebApi({
+      clientId : config.client,
+      clientSecret : config.secret,
+    });
+
   }
 
   componentWillMount() {
@@ -23,12 +31,8 @@ class App extends React.Component {
   }
 
   handleClick() {
-    Linking.canOpenURL(this.state.spotify).then(supported => {
-      if (supported) {
-        Linking.openURL(this.state.spotify);
-      } else {
-        console.log('Don\'t know how to open URI: ' + this.state.spotify);
-      }
+    Linking.canOpenURL(this.state.url).then(supported => {
+      if (supported) Linking.openURL(this.state.url)
     });
   };
 
@@ -39,32 +43,23 @@ class App extends React.Component {
 
   async getAlbum() {
     const album = this.getRandom()
-    const artist = album.split(' - ')[0]
-    const title = album.split(' - ')[1]
+    const split = album.split(' - ')
+    const artist = split[0]
+    const title = split[1]
 
-    const spotifyApi = new spotifyWebApi({
-      clientId : config.client,
-      clientSecret : config.secret,
-    });
+    const spotify = await this.spotifyApi.searchAlbums(album)
 
-    const API_KEY = config.api
-    const url = `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${API_KEY}&artist=${artist}&album=${title}&format=json`
-    try {
-      const response = await fetch(url);
-      const albumInfo = await response.json();
-      const spotify = await spotifyApi.searchAlbums(album)
-      const cover = albumInfo.album.image.filter( (i) => { return i.size === 'extralarge'} )[0]['#text']
-
-      this.setState({
-        title: title,
-        artist: artist,
-        cover: cover || false,
-        spotify: spotify.body.albums.items[0].uri || false,
-      })
-      return albumInfo
-    } catch(error) {
-      console.error("OMG: ", error);
+    if (spotify.body.albums.items.length == 0) {
+      return this.getAlbum()
     }
+
+
+    const item = spotify.body.albums.items[0]
+    const cover = item.images[0].url
+    const url = item.uri
+
+
+    this.setState({ title, artist, cover, url })
   }
 
   render() {
@@ -99,6 +94,7 @@ class App extends React.Component {
             textAlign: 'center',
             fontSize: 18,
             paddingBottom: 10,
+            fontWeight: "bold",
           }}>
             {this.state.title}
           </Text>
@@ -108,7 +104,7 @@ class App extends React.Component {
           }}>
             {this.state.artist}
           </Text>
-          { this.state.spotify &&
+          { this.state.url &&
             <TouchableOpacity
               onPress={this.handleClick.bind(this)}>
               <View style={{ alignSelf: 'center', marginTop: 20 }}>
