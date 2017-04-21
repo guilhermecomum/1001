@@ -1,0 +1,40 @@
+import React from 'react'
+import Expo from 'expo'
+import { Ionicons } from '@expo/vector-icons'
+import { View, Text } from 'react-native'
+export default class NavBar extends React.Component {
+
+  render() {
+    const { index } = this.props
+    return (
+      <View>
+
+        <View style={{
+          alignItems: 'center',
+          flexDirection: 'row',
+          paddingHorizontal: 10,
+        }}>
+
+          <View style={{ width: 20, marginRight: 20 }}>
+            <Ionicons name="ios-menu" size={32} color="#f1c40f" />
+          </View>
+
+          <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignSelf: 'center',
+          }}>
+            <Text style={{
+              color: '#fff',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              paddingRight: 40,
+            }}>
+              { index }
+            </Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+}
