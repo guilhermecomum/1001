@@ -1,7 +1,7 @@
 import React from 'react'
 import Expo from 'expo'
 import spotifyWebApi from 'spotify-web-api-node'
-import { StyleSheet, Image, Text, View, TouchableOpacity, Linking } from 'react-native'
+import { StatusBar, StyleSheet, Image, Text, View, TouchableOpacity, Linking } from 'react-native'
 import { Components } from 'expo'
 import { Entypo } from '@expo/vector-icons'
 
@@ -71,10 +71,10 @@ class App extends React.Component {
         flex: 1,
         backgroundColor: '#000',
         justifyContent: 'center',
-        marginTop: Expo.Constants.statusBarHeight,
-        paddingTop: 5,
+        paddingTop: Expo.Constants.statusBarHeight,
       }}
       >
+        <StatusBar barStyle='light-content' />
         <NavBar index={`Album n. ${this.state.random}`} />
         <View style={{
           flex: 1,
