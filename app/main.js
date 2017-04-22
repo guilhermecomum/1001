@@ -104,9 +104,9 @@ class App extends React.Component {
                justifyContent: 'flex-end',
                paddingLeft: 10,
                paddingBottom: 10,
-               backgroundColor: 'rgba(0,0,0, 0.3)'
+               backgroundColor: 'rgba(0,0,0, 0.2)'
              }}>
-               <Entypo name="info-with-circle" size={20} color="rgba(241,196,15,0.9)" />
+               <Entypo name="info-with-circle" size={20} color="#f1c40f" />
              </View>
            </View>
           }
