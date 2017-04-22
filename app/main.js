@@ -82,17 +82,33 @@ class App extends React.Component {
           paddingHorizontal: 20,
         }}>
           {this.state.cover &&
-           <Image
-             source={{uri: this.state.cover}}
-             style={{
-               flex: 0,
-               resizeMode: 'contain',
-               height: 200,
-               width: 200,
+           <View>
+             <Image
+               source={{uri: this.state.cover}}
+               style={{
+                 flex: 0,
+                 resizeMode: 'contain',
+                 height: 250,
+                 width: 250,
+                 alignSelf: 'center',
+                 marginBottom: 20,
+                 position: 'relative',
+               }}
+             />
+             <View style={{
+               position: 'absolute',
+               width: 250,
+               height: 250,
                alignSelf: 'center',
-               marginBottom: 20,
-             }}
-           />
+               alignItems: 'flex-start',
+               justifyContent: 'flex-end',
+               paddingLeft: 10,
+               paddingBottom: 10,
+               backgroundColor: 'rgba(0,0,0, 0.3)'
+             }}>
+               <Entypo name="info-with-circle" size={20} color="rgba(241,196,15,0.9)" />
+             </View>
+           </View>
           }
           <Text style={{
             color: '#fff',
@@ -111,8 +127,8 @@ class App extends React.Component {
           </Text>
           { this.state.url &&
             <TouchableOpacity
-              onPress={this.handleClick.bind(this)}>
-              <View style={{ alignSelf: 'center', marginTop: 20 }}>
+              onPress={this.handleClick.bind(this)} style={{ alignSelf: 'center', marginTop: 20}}>
+              <View style={{ alignSelf: 'center' }}>
                 <Entypo name="spotify" size={40} color="#1ED760" />
               </View>
             </TouchableOpacity>
