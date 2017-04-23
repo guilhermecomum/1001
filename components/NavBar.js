@@ -2,21 +2,23 @@ import React from 'react'
 import Expo from 'expo'
 import { Ionicons } from '@expo/vector-icons'
 import { View, Text } from 'react-native'
+import Colors from '../Colors'
 export default class NavBar extends React.Component {
 
   render() {
     const { index } = this.props
     return (
       <View>
-
         <View style={{
           alignItems: 'center',
           flexDirection: 'row',
           paddingHorizontal: 10,
+          backgroundColor: Colors.black,
+          paddingTop: Expo.Constants.statusBarHeight,
         }}>
 
           <View style={{ width: 20, marginRight: 20 }}>
-            <Ionicons name="ios-menu" size={32} color="#f1c40f" />
+            <Ionicons name="ios-menu" size={32} color={Colors.yellow} />
           </View>
 
           <View style={{
@@ -25,7 +27,7 @@ export default class NavBar extends React.Component {
             alignSelf: 'center',
           }}>
             <Text style={{
-              color: '#fff',
+              color: Colors.white,
               fontWeight: 'bold',
               textAlign: 'center',
               paddingRight: 40,
